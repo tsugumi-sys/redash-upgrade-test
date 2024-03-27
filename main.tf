@@ -95,7 +95,7 @@ resource "aws_ebs_volume" "redash_ebs" {
   size              = 10 # GB
 }
 
-resource "aws_volume_attachment" " redash_ebs_attach" {
+resource "aws_volume_attachment" "redash_ebs_attach" {
   device_name = "/dev/sdh"
   volume_id   = aws_ebs_volume.redash_ebs.id
   instance_id = aws_instance.redash_instance.id
