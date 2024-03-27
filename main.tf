@@ -105,7 +105,7 @@ resource "aws_instance" "redash_instance" {
   ami                         = local.ami
   instance_type               = local.instance_type
   subnet_id                   = aws_subnet.redash_subnet.id
-  security_groups             = [aws_security_group.redash.name]
+  vpc_security_group_ids      = [aws_security_groups.allow_ssh.id]
   associate_public_ip_address = true
   root_block_device {
     volume_size = 8 # GB
