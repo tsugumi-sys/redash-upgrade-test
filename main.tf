@@ -1,7 +1,7 @@
 locals {
   # Redash recommend AMI for us-west-2
   # https://redash.io/help/open-source/setup#aws
-  ami           = "ami-0c457f229774da543"
+  ami           = "ami-060741a96307668be"
   instance_type = "t2.small"
 }
 
