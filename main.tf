@@ -105,7 +105,7 @@ resource "aws_volume_attachment" "redash_ebs_attach" {
 # Session Manager Access for EC2
 ##
 resource "aws_iam_role" "ssm_role" {
-  name = "ssm_role"
+  name = "redash_test_ssm_role"
 
   assume_role_policy = jsonencode({
     Version = "2012-10-17",
@@ -123,11 +123,11 @@ resource "aws_iam_role" "ssm_role" {
 
 resource "aws_iam_role_policy_attachment" "ssm_policy" {
   role       = aws_iam_role.ssm_role.name
-  policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonSSMManagedInstanceCore"
+  policy_arn = "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore"
 }
 
 resource "aws_iam_instance_profile" "ssm_instance_profile" {
-  name = "ssm_instance_profile"
+  name = "redash_test_ssm_instance_profile"
   role = aws_iam_role.ssm_role.name
 }
 
