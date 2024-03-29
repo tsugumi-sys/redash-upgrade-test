@@ -101,13 +101,48 @@ resource "aws_volume_attachment" "redash_ebs_attach" {
   instance_id = aws_instance.redash_instance.id
 }
 
+###
+# Session Manager Access for EC2
+##
+resource "aws_iam_role" "ssm_role" {
+  name = "ssm_role"
+
+  assume_role_policy = jsonencode({
+    Version = "2012-10-17",
+    Statement = [
+      {
+        Action = "sts:AssumeRole",
+        Effect = "Allow",
+        Principal = {
+          Service = "ec2.amazonaws.com"
+        }
+      },
+    ]
+  })
+}
+
+resource "aws_iam_role_policy_attachment" "ssm_policy" {
+  role       = aws_iam_role.ssm_role.name
+  policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonSSMManagedInstanceCore"
+}
+
+resource "aws_iam_instance_profile" "ssm_instance_profile" {
+  name = "ssm_instance_profile"
+  role = aws_iam_role.ssm_role.name
+}
+
+###
+# EC2
+###
 resource "aws_instance" "redash_instance" {
   ami                         = local.ami
   instance_type               = local.instance_type
   subnet_id                   = aws_subnet.redash_subnet.id
   vpc_security_group_ids      = [aws_security_group.redash.id]
   associate_public_ip_address = true
+  iam_instance_profile        = aws_iam_instance_profile.ssm_instance_profile.name
   root_block_device {
     volume_size = 8 # GB
   }
 }
+
